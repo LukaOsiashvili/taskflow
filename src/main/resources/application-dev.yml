@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    dev.taskflow: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
