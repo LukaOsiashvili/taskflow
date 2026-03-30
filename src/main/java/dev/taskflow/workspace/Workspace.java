@@ -41,5 +41,6 @@ public class Workspace {
     private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<WorkspaceMember> members = new ArrayList<>();
 }

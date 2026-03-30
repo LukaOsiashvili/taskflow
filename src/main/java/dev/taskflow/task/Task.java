@@ -41,6 +41,7 @@ public class Task {
     private Task parentTask;
 
     @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Task> subtasks = new ArrayList<>();
 
     @Column(nullable = false)

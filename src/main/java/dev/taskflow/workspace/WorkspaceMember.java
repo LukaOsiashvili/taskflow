@@ -3,6 +3,7 @@ package dev.taskflow.workspace;
 import dev.taskflow.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class WorkspaceMember {
     @Column(nullable = false)
     private WorkspaceRole role = WorkspaceRole.MEMBER;
 
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime joinedAt = OffsetDateTime.now();
+    private OffsetDateTime joinedAt;
 }

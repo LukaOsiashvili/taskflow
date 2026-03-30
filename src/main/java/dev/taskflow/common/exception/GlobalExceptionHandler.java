@@ -45,6 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
     public ApiResponse<Void> handleGenericException(Exception ex){
+        ex.printStackTrace();
         return ApiResponse.error("An Unexpected Error Occurred");
     }
 }

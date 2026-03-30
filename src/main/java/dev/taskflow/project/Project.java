@@ -45,6 +45,7 @@ public class Project {
     private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ProjectMember> members = new ArrayList<>();
 
 }

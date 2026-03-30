@@ -46,8 +46,10 @@ public class User {
     private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "owner")
+    @Builder.Default
     private List<Workspace> ownedWorkspaces = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<WorkspaceMember> workspaceMembership = new ArrayList<>();
 }
