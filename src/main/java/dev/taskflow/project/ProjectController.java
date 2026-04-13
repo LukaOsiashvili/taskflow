@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/workspacess/{workspaceId}/projects", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/workspaces/{workspaceId}/projects", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ProjectController {
 
