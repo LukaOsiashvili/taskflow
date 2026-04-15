@@ -28,7 +28,7 @@ public class Attachment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by_id")
-    private User uploaded_by_id;
+    private User uploadedBy;
 
     @Column(nullable = false)
     private String fileName;
