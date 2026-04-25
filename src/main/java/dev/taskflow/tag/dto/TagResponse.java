@@ -17,7 +17,7 @@ public class TagResponse {
         this.id = tag.getId();
         this.workspaceId = tag.getWorkspace().getId();
         this.name = tag.getName();
-        this.color = getColor();
+        this.color = tag.getColor();
     }
 
     public static TagResponse from(Tag tag){

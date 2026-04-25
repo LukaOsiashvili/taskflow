@@ -1,5 +1,6 @@
 package dev.taskflow.workspace;
 
+import dev.taskflow.common.config.CacheConfig;
 import dev.taskflow.common.exception.AccessDeniedException;
 import dev.taskflow.common.exception.BusinessRuleException;
 import dev.taskflow.common.exception.ResourceNotFoundException;
@@ -8,6 +9,9 @@ import dev.taskflow.user.User;
 import dev.taskflow.user.UserRepository;
 import dev.taskflow.user.UserService;
 import dev.taskflow.workspace.dto.*;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,6 +58,7 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.WORKSPACE_BY_ID, key = "#workspaceId")
     public WorkspaceResponse getById(UUID workspaceId) {
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
         requireMember(workspace, userService.resolveCurrentUser());
@@ -71,6 +76,7 @@ public class WorkspaceService {
     }
 
     @Transactional
+    @CacheEvict(value = CacheConfig.WORKSPACE_BY_ID, key = "#workspaceId")
     public WorkspaceResponse update(UUID workspaceId, UpdateWorkspaceRequest request) {
         User currentUser = userService.resolveCurrentUser();
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
@@ -83,6 +89,12 @@ public class WorkspaceService {
     }
 
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(value = CacheConfig.WORKSPACE_BY_ID, key = "#workspaceId"),
+                    @CacheEvict(value = CacheConfig.WORKSPACE_MEMBERS, key = "#workspaceId")
+            }
+    )
     public void delete(UUID workspaceId) {
         User currentUser = userService.resolveCurrentUser();
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
@@ -92,6 +104,7 @@ public class WorkspaceService {
     }
 
     @Transactional
+    @CacheEvict(value = CacheConfig.WORKSPACE_MEMBERS, key = "#workspaceId")
     public WorkspaceResponse.MemberResponse inviteMember(UUID workspaceId, InviteMemberRequest request) {
         User currentUser = userService.resolveCurrentUser();
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
@@ -120,6 +133,7 @@ public class WorkspaceService {
     }
 
     @Transactional
+    @CacheEvict(value = CacheConfig.WORKSPACE_MEMBERS, key = "#workspaceId")
     public WorkspaceResponse.MemberResponse updateMemberRole(UUID workspaceId, UUID userId, UpdateMemberRoleRequest request) {
         User currentUser = userService.resolveCurrentUser();
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
@@ -142,6 +156,7 @@ public class WorkspaceService {
     }
 
     @Transactional
+    @CacheEvict(value = CacheConfig.WORKSPACE_MEMBERS, key = "#workspaceId")
     public void removeMember(UUID workspaceId, UUID userId) {
         User currentUser = userService.resolveCurrentUser();
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
@@ -159,6 +174,7 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.WORKSPACE_MEMBERS, key = "#workspaceId")
     public List<WorkspaceResponse.MemberResponse> getMembers(UUID workspaceId) {
         Workspace workspace = findWorkspaceOrThrow(workspaceId);
         requireMember(workspace, userService.resolveCurrentUser());

@@ -1,8 +1,10 @@
 package dev.taskflow.task;
 
+import dev.taskflow.common.async.NotificationService;
 import dev.taskflow.common.exception.AccessDeniedException;
 import dev.taskflow.common.exception.BusinessRuleException;
 import dev.taskflow.common.exception.ResourceNotFoundException;
+import dev.taskflow.common.metrics.TaskMetrics;
 import dev.taskflow.project.*;
 import dev.taskflow.task.dto.*;
 import dev.taskflow.user.User;
@@ -34,6 +36,8 @@ public class TaskService {
     private final WorkspaceMemberRepository workspaceMemberRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
+    private final TaskMetrics taskMetrics;
 
     //=====TASK CRUD=====
 
@@ -77,6 +81,8 @@ public class TaskService {
 
         taskRepository.save(task);
         taskRepository.flush();
+
+        taskMetrics.recordTaskCreated();
 
         log.debug("Task created: {} in project {}", task.getId(), projectId);
         return TaskResponse.from(task);
@@ -155,6 +161,8 @@ public class TaskService {
         Task task = resolveTaskInProject(taskId, projectId);
         task.setStatus(request.getStatus());
 
+        taskMetrics.recordStatusTransition(task.getStatus(), request.getStatus());
+
         log.debug("Task {} status changed to {}", taskId, request.getStatus());
         return TaskResponse.from(task);
     }
@@ -180,6 +188,14 @@ public class TaskService {
                 throw new BusinessRuleException("Assignee must be a member of the project");
             }
             task.setAssignee(assignee);
+
+            if (request.getAssigneeId() != null) {
+                task.setAssignee(assignee);
+                notificationService.notifyTaskAssigned(task.getId(), task.getTitle(), assignee.getEmail());
+            } else {
+                notificationService.notifyTaskUnassigned(task.getId(), task.getTitle());
+                task.setAssignee(null);
+            }
         }
 
         return TaskResponse.from(task);
