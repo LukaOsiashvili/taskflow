@@ -19,7 +19,7 @@ public final class SlugUtils {
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase()
                 .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("-2{2,}", "-")
+                .replaceAll("-{2,}", "-")
                 .replaceAll("^-|-$", "");
     }
 

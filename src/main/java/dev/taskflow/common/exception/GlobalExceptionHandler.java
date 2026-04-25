@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN) //401
+    @ResponseStatus(HttpStatus.FORBIDDEN) //403
     public ApiResponse<Void> handleAccessDenied(AccessDeniedException ex){
         return ApiResponse.error(ex.getMessage());
     }

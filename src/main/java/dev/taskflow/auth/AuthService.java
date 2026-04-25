@@ -27,7 +27,7 @@ public class AuthService {
     @Transactional
     public AuthResponse register(RegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
-            throw new BusinessRuleException("Email already in user");
+            throw new BusinessRuleException("Email already in use");
         }
 
         User user = User.builder()

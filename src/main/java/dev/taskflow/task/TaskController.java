@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(
-        value = "/workspace/{workspaceId}/projects/{projectId}/tasks",
+        value = "/workspaces/{workspaceId}/projects/{projectId}/tasks",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 @RequiredArgsConstructor
@@ -36,14 +36,14 @@ public class TaskController {
 
     @GetMapping
     public ApiResponse<Page<TaskResponse>> listTasks(
-            @PathVariable UUID workspaceID,
+            @PathVariable UUID workspaceId,
             @PathVariable UUID projectId,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
             @RequestParam(required = false) UUID assigneeId,
             @PageableDefault(size = 20, sort = "createdAt") Pageable pageable
     ) {
-        return ApiResponse.success(taskService.listTasks(workspaceID, projectId, status, priority, assigneeId, pageable));
+        return ApiResponse.success(taskService.listTasks(workspaceId, projectId, status, priority, assigneeId, pageable));
     }
 
     @GetMapping("/{taskId}")

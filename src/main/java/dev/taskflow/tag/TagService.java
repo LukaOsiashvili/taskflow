@@ -49,7 +49,7 @@ public class TagService {
         Tag tag = Tag.builder()
                 .workspace(workspace)
                 .name(request.getName())
-                .color(request.getColor() != null ? request.getColor() : "6366f1")
+                .color(request.getColor() != null ? request.getColor() : "#6366f1")
                 .build();
 
         tagRepository.save(tag);

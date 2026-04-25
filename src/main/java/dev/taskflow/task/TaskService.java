@@ -159,9 +159,10 @@ public class TaskService {
         resolveProjectMember(projectId, currentUser); // Any project member can change status
 
         Task task = resolveTaskInProject(taskId, projectId);
-        task.setStatus(request.getStatus());
 
         taskMetrics.recordStatusTransition(task.getStatus(), request.getStatus());
+
+        task.setStatus(request.getStatus());
 
         log.debug("Task {} status changed to {}", taskId, request.getStatus());
         return TaskResponse.from(task);
